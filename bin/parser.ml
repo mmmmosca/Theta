@@ -11,4 +11,4 @@ type expression =
 let rec parse = function
   | [] -> []
   | [ Lexer.IMP; Lexer.STRING name ] :: rest -> [ Imp name ] :: parse rest
-  | [] -> []
+  | _ -> Utils.todo ()
