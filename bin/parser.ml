@@ -1,5 +1,6 @@
 type expression = Imp of string | Call of string * expression list
 
-let parse = function
+let rec parse = function
   | [] -> []
-  | [ Lexer.IMP; Lexer.ID name ] :: rest -> [ Imp name ]
+  | [ Lexer.IMP; Lexer.STRING name ] :: rest -> [ Imp name ] :: parse rest
+  | [] -> []
