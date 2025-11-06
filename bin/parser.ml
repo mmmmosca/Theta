@@ -8,7 +8,10 @@ type expression =
   | Str of string
   | FuncDef of string * string list * expression
 
-let rec parse = function
-  | [] -> []
-  | [ Lexer.IMP; Lexer.STRING name ] :: rest -> [ Imp name ] :: parse rest
-  | _ -> Utils.todo ()
+let parse tokens =
+  let rec loop = function
+    | [] -> []
+    | [ Lexer.IMP; Lexer.STRING name ] :: rest -> [ Imp name ] :: loop rest
+    | _ -> Utils.todo ()
+  in
+  Ok (loop tokens)
