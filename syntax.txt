@@ -1,0 +1,8 @@
+imp io
+
+foo(arg1, arg2, arg3) -> (arg1 + arg2) * arg3
+
+main() -> block{
+    let x = foo(1,2,3) // the var x containing 9
+    io.out(x)          // the call to the blueprint io containing the bahavior out which outputs x
+}
