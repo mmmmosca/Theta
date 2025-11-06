@@ -1,1 +1,5 @@
-let parse tokens = let _ = tokens in Utils.todo ()
+type expression = Imp of string | Call of string * expression list
+
+let parse = function
+  | [] -> []
+  | [ Lexer.IMP; Lexer.ID name ] :: rest -> [ Imp name ]
