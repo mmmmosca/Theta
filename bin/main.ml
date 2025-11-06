@@ -1,5 +1,5 @@
 let () =
-  match Lexer.lex "imp io\n\nmain() -> block{io.out(\"Hello world!\")}" with
+  match Lexer.lex "imp io\n\nmain() -> {io.out(\"Hello world!\")}" with
   | Error errors -> Errors.print_errors errors
   | Ok tokens -> (
       match Parser.parse tokens with
