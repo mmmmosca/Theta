@@ -11,7 +11,7 @@ type expression =
 let parse tokens =
   let rec loop = function
     | [] -> []
-    | [ Lexer.IMP; Lexer.STRING name ] :: rest -> [ Imp name ] :: loop rest
+    | Lexer.IMP :: Lexer.STRING name :: rest -> [ Imp name ] :: loop rest
     | _ -> Utils.todo ()
   in
   Ok (loop tokens)
