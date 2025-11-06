@@ -7,6 +7,8 @@ type tokenType =
   | RCURLY
   | DOT
   | IMP
+  | LET
+  | EQUALS
   | STRING of string
 
 
