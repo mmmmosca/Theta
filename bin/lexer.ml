@@ -1,3 +1,9 @@
+(*
+  THE NEXT THING TO ADD AS TOKENS ARE THE 'when' AND 'finally' KEYWORDS.
+  THOSE ARE USED FOR CONTROL FLOW AND PRESENT THIS SYNTAX:
+  fact(x) -> x * fact(x-1) when x > 1 finally x
+*)
+
 type tokenType =
   | ID of string
   | LPAREN
@@ -8,6 +14,8 @@ type tokenType =
   | DOT
   | IMP
   | LET
+  | WHEN
+  | FINALLY
   | EQUALS
   | STRING of string
 
@@ -38,6 +46,12 @@ let print_tokens tokens =
     match tokens with
     | LET :: rest ->
         print_endline "let";
+        loop rest
+    | WHEN :: rest ->
+        print_endline "when";
+        loop rest
+    | FINALLY :: rest ->
+        print_endline "finally";
         loop rest
     | ID id :: rest ->
         print_endline ("id: " ^ id);
