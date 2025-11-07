@@ -42,7 +42,10 @@ let rec lex code =
     append (Ok DOT) (lex (String.sub code 1 (String.length code - 1)))
   else if String.starts_with ~prefix:"=" code then
     append (Ok EQUALS) (lex (String.sub code 1 (String.length code - 1)))
-  else if Char.code (String.get code 0) < 33 then
+  else if String.starts_with ~prefix:"\"" code then
+    Ok [] (*let rec lex_string code = () in
+    lex_string code*)
+  else if String.length code > 0 && Char.code (String.get code 0) < 33 then
     lex (String.sub code 1 (String.length code - 1))
   else Ok []
 
