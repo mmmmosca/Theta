@@ -19,27 +19,32 @@ type tokenType =
   | EQUALS
   | STRING of string
 
-let lex code =
-  let rec loop code =
-    if String.starts_with ~prefix:"(" code then
-      LPAREN :: loop (String.sub code 1 (String.length code - 1))
-    else if String.starts_with ~prefix:")" code then
-      RPAREN :: loop (String.sub code 1 (String.length code - 1))
-    else if String.starts_with ~prefix:"->" code then
-      ARROW :: loop (String.sub code 2 (String.length code - 2))
-    else if String.starts_with ~prefix:"{" code then
-      LCURLY :: loop (String.sub code 1 (String.length code - 1))
-    else if String.starts_with ~prefix:"}" code then
-      RCURLY :: loop (String.sub code 1 (String.length code - 1))
-    else if String.starts_with ~prefix:"." code then
-      DOT :: loop (String.sub code 1 (String.length code - 1))
-    else if String.starts_with ~prefix:"=" code then
-      EQUALS :: loop (String.sub code 1 (String.length code - 1))
-    else if Char.code (String.get code 0) < 33 then
-      loop (String.sub code 1 (String.length code - 1))
-    else []
-  in
-  Ok (loop code)
+let append what = function
+  | Ok rest -> (
+      match what with
+      | Ok value -> Ok (value :: rest)
+      | Error error -> Error [ error ])
+  | Error rest -> (
+      match what with Ok _ -> Error rest | Error error -> Error (error :: rest))
+
+let rec lex code =
+  if String.starts_with ~prefix:"(" code then
+    append (Ok LPAREN) (lex (String.sub code 1 (String.length code - 1)))
+  else if String.starts_with ~prefix:")" code then
+    append (Ok RPAREN) (lex (String.sub code 1 (String.length code - 1)))
+  else if String.starts_with ~prefix:"->" code then
+    append (Ok ARROW) (lex (String.sub code 2 (String.length code - 2)))
+  else if String.starts_with ~prefix:"{" code then
+    append (Ok LCURLY) (lex (String.sub code 1 (String.length code - 1)))
+  else if String.starts_with ~prefix:"}" code then
+    append (Ok RCURLY) (lex (String.sub code 1 (String.length code - 1)))
+  else if String.starts_with ~prefix:"." code then
+    append (Ok DOT) (lex (String.sub code 1 (String.length code - 1)))
+  else if String.starts_with ~prefix:"=" code then
+    append (Ok EQUALS) (lex (String.sub code 1 (String.length code - 1)))
+  else if Char.code (String.get code 0) < 33 then
+    lex (String.sub code 1 (String.length code - 1))
+  else Ok []
 
 let print_tokens tokens =
   let rec loop tokens =
