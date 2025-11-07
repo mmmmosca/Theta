@@ -35,7 +35,7 @@ let lex code =
       DOT :: loop (String.sub code 1 (String.length code - 1))
     else if String.starts_with ~prefix:"=" code then
       EQUALS :: loop (String.sub code 1 (String.length code - 1))
-    else if String.contains " \n\t\r" (String.get code 0) then
+    else if Char.code (String.get code 0) < 33 then
       loop (String.sub code 1 (String.length code - 1))
     else []
   in
