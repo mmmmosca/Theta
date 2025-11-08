@@ -33,7 +33,8 @@ let append what = function
 let special = "()->{}.=\""
 
 let rec lex code =
-  if String.starts_with ~prefix:"(" code then
+  if String.length code = 0 then Ok []
+  else if String.starts_with ~prefix:"(" code then
     append (Ok LPAREN) (lex (strip_first code 1))
   else if String.starts_with ~prefix:")" code then
     append (Ok RPAREN) (lex (strip_first code 1))
@@ -61,7 +62,20 @@ let rec lex code =
     append token (lex rest)
   else if String.length code > 0 && Char.code (String.get code 0) < 33 then
     lex (String.sub code 1 (String.length code - 1))
-  else Ok []
+  else
+    let rec lex_id code id =
+      (*print_endline code;*)
+      if
+        String.length code = 0
+        || String.contains special (String.get code 0)
+        || Char.code (String.get code 0) < 33
+      then (
+        print_endline id;
+        (Ok (ID id), code))
+      else lex_id (strip_first code 1) (id ^ String.sub code 0 1)
+    in
+    let token, rest = lex_id code "" in
+    append token (lex rest)
 
 let print_tokens tokens =
   let rec loop tokens =

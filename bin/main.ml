@@ -1,6 +1,6 @@
 let () =
   match
-    Lexer.lex "( ) \"Hello world\\\" io\n\nmain() -> {io.out(\"Hello world!\")}"
+    Lexer.lex "let io = imp \"io\"\n\nmain() -> {io.out(\"Hello world!\")}"
   with
   | Error errors -> Errors.print_errors errors
   | Ok tokens -> (
